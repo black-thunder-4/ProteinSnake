@@ -63,8 +63,6 @@ class EGNN_Model(nn.Module):
             depth=depth,
             num_nearest_neighbors=8
         )
-
-        self.final = nn.Linear(emb_dim, 3)
         
     def create_chain_adj(self, lengths, max_length):
         """
@@ -119,5 +117,5 @@ class EGNN_Model(nn.Module):
         # It returns the predicted delta for each node.
         feats_out, coords_out = self.egnn(residues, coords, mask=mask, adj_mat=adj)
         
-        delta = self.final(feats_out)
+        delta = (coords_out - coords) * mask[..., None]
         return delta
